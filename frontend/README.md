@@ -57,7 +57,7 @@ import Content from '../components/layout/Content'
 
 function Menu() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full">
       <Navbar />
       <Content>
         <div className="py-8">
@@ -73,13 +73,39 @@ function Menu() {
 export default Menu
 ```
 
-### Step 2: Import and Use Layout Components
+### Step 2: Add Route to AppRoutes
+
+After creating your page component, add it to the routing configuration:
+
+**File:** `src/routes/AppRoutes.jsx`
+
+```jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from '../pages/Home'
+import Menu from '../pages/Menu'  // Import your new page
+
+function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/menu" element={<Menu />} />  // Add your route
+        {/* Add more routes here as you create new pages */}
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default AppRoutes
+```
+
+### Step 3: Import and Use Layout Components
 
 The layout components (`Navbar`, `Footer`, and `Content`) are located in `src/components/layout/`:
 
 - **Navbar**: Top navigation bar with links
 - **Footer**: Bottom footer with contact info and links
-- **Content**: Main content wrapper with consistent padding
+- **Content**: Main content wrapper with full-width support
 
 #### Import Statement
 
@@ -91,10 +117,10 @@ import Content from '../components/layout/Content'
 
 #### Layout Structure
 
-Always wrap your page content with this structure:
+Always wrap your page content with this structure (note the `w-full` class for full-width support):
 
 ```jsx
-<div className="flex flex-col min-h-screen bg-gray-50">
+<div className="flex flex-col min-h-screen bg-gray-50 w-full">
   <Navbar />
   <Content>
     {/* Your page content here */}
@@ -103,14 +129,16 @@ Always wrap your page content with this structure:
 </div>
 ```
 
-### Step 3: Using Components in Your Page
+**Important:** Always include `w-full` in the outer wrapper div to ensure full-width layout across all screen sizes.
+
+### Step 4: Using Components in Your Page
 
 #### Using Layout Components
 
 ```jsx
 function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full">
       <Navbar />
       <Content>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -133,7 +161,7 @@ import Input from '../components/common/Input'
 
 function ContactPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full">
       <Navbar />
       <Content>
         <form>
@@ -194,9 +222,10 @@ import Footer from '../components/layout/Footer'
 ### Content Component
 
 The Content component:
-- Provides consistent padding and max-width
+- Provides full-width layout support
 - Accepts children as props
-- Ensures proper spacing for page content
+- Flexible container that adapts to content needs
+- No padding constraints - add your own as needed
 
 **Location:** `src/components/layout/Content.jsx`
 
@@ -205,10 +234,14 @@ The Content component:
 import Content from '../components/layout/Content'
 
 <Content>
-  <h1>Your Page Title</h1>
-  <p>Your page content...</p>
+  <div className="w-full min-h-[calc(100vh-200px)] bg-blue-500">
+    <h1>Your Page Title</h1>
+    <p>Your page content...</p>
+  </div>
 </Content>
 ```
+
+**Note:** For full-width elements, use `w-full` class. For constrained content, wrap in a container div with `max-w-*` classes.
 
 ## Example: Complete Page Implementation
 
@@ -224,7 +257,7 @@ import Content from '../components/layout/Content'
 
 function Reservations() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full">
       <Navbar />
       <Content>
         <div className="max-w-2xl mx-auto">
@@ -265,20 +298,53 @@ function Reservations() {
 export default Reservations
 ```
 
+## Routing Setup
+
+The application uses React Router for navigation. All routes are defined in `src/routes/AppRoutes.jsx`.
+
+### Current Routes
+
+- `/` - Home page
+
+### Adding New Routes
+
+1. Create your page component in `src/pages/`
+2. Import it in `src/routes/AppRoutes.jsx`
+3. Add a new `<Route>` element:
+
+```jsx
+import YourNewPage from '../pages/YourNewPage'
+
+<Route path="/your-path" element={<YourNewPage />} />
+```
+
+### Navigation Between Pages
+
+Use React Router's `Link` component for navigation:
+
+```jsx
+import { Link } from 'react-router-dom'
+
+<Link to="/menu">Go to Menu</Link>
+```
+
 ## Tips
 
 1. **Always use the layout structure**: Wrap your pages with Navbar, Content, and Footer for consistency
-2. **Use Tailwind CSS classes**: All components are styled with Tailwind CSS utility classes
-3. **Keep pages in `pages/` folder**: This helps organize your route-level components
-4. **Reuse components**: Import and reuse components from `components/common/`, `components/layout/`, and `components/restaurant/` as needed
-5. **Responsive design**: Use Tailwind's responsive prefixes (`md:`, `lg:`, etc.) for mobile-first design
+2. **Include `w-full` class**: Always add `w-full` to the outer wrapper div for full-width layout
+3. **Use Tailwind CSS classes**: All components are styled with Tailwind CSS utility classes
+4. **Keep pages in `pages/` folder**: This helps organize your route-level components
+5. **Add routes after creating pages**: Don't forget to register new pages in `AppRoutes.jsx`
+6. **Reuse components**: Import and reuse components from `components/common/`, `components/layout/`, and `components/restaurant/` as needed
+7. **Responsive design**: Use Tailwind's responsive prefixes (`md:`, `lg:`, etc.) for mobile-first design
+8. **Full-width elements**: Use `w-full` class for elements that should span the full viewport width
 
 ## Technologies Used
 
 - **React** - UI library
 - **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Router** - (Can be added for routing between pages)
+- **Tailwind CSS v4** - Utility-first CSS framework with Vite plugin
+- **React Router DOM** - Client-side routing for navigation between pages
 
 ## Scripts
 
